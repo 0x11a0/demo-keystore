@@ -1,0 +1,84 @@
+basePath: /
+definitions:
+  main.RetrieveRequest:
+    properties:
+      password:
+        description: Password used to decrypt the stored private key
+        type: string
+      username:
+        description: Username of the user
+        type: string
+    type: object
+  main.StoreRequest:
+    properties:
+      password:
+        description: The password used for encryption
+        type: string
+      private_key:
+        description: The private key to encrypt and store
+        type: string
+      username:
+        description: Username of the user
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a secure microservice to store and retrieve encrypted private
+    keys.
+  title: Crypto Vault API
+  version: "1.0"
+paths:
+  /retrieve:
+    post:
+      consumes:
+      - application/json
+      description: Decrypt and return a stored private key
+      parameters:
+      - description: Retrieve Request (only username and password are required)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.RetrieveRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Decrypted key
+          schema:
+            type: string
+        "401":
+          description: Decryption failed
+          schema:
+            type: string
+        "404":
+          description: No such user
+          schema:
+            type: string
+      summary: Retrieve decrypted private key
+  /store:
+    post:
+      consumes:
+      - application/json
+      description: Encrypt and store a private key for a user
+      parameters:
+      - description: Store Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.StoreRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Stored successfully
+          schema:
+            type: string
+        "500":
+          description: Encryption failed
+          schema:
+            type: string
+      summary: Store encrypted private key
+swagger: "2.0"

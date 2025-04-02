@@ -1,0 +1,125 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a secure microservice to store and retrieve encrypted private keys.",
+        "title": "Crypto Vault API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/retrieve": {
+            "post": {
+                "description": "Decrypt and return a stored private key",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "summary": "Retrieve decrypted private key",
+                "parameters": [
+                    {
+                        "description": "Retrieve Request (only username and password are required)",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.RetrieveRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Decrypted key",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Decryption failed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "No such user",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/store": {
+            "post": {
+                "description": "Encrypt and store a private key for a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "summary": "Store encrypted private key",
+                "parameters": [
+                    {
+                        "description": "Store Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.StoreRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Stored successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Encryption failed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.RetrieveRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "description": "Password used to decrypt the stored private key",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "Username of the user",
+                    "type": "string"
+                }
+            }
+        },
+        "main.StoreRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "description": "The password used for encryption",
+                    "type": "string"
+                },
+                "private_key": {
+                    "description": "The private key to encrypt and store",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "Username of the user",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
